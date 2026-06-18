@@ -32,10 +32,26 @@ composicao_hh:
     3. Duração estimada de cada atividade
     4. Fatores de ajuste (complexidade, condições de campo, turno)
 
-    Consulte a base histórica de obras da MSI Engenharia e
-    práticas de mercado para montagem industrial e mineração.
+    Utilize a BASE HISTÓRICA DE OBRAS da MSI Engenharia abaixo como referência
+    para calibrar índices de produtividade e dimensionar equipes:
 
-    Base histórica de referência: {base_historica}
+    BASE HISTÓRICA DE OBRAS MSI ENGENHARIA:
+    | Obra | Tipo | Disciplina | Qtd | Unid | HH Total | HH/Unid | Equipe | Dias | Custo (R$) | Ano |
+    | Mineradora Vale | Montagem | Estrutura Metálica | 150 | ton | 4500 | 30 | 8 montadores + 2 soldadores | 45 | 850.000 | 2024 |
+    | Mineradora Vale | Montagem | Tubulação | 2000 | m | 6000 | 3 | 6 tubuladores + 4 soldadores | 60 | 1.200.000 | 2024 |
+    | Usina Beneficiamento | Reforma | Caldeiraria | 80 | ton | 3200 | 40 | 6 caldeireiros + 3 soldadores | 40 | 640.000 | 2024 |
+    | Usina Beneficiamento | Montagem | Estrutura Metálica | 200 | ton | 5000 | 25 | 10 montadores + 3 soldadores | 50 | 950.000 | 2024 |
+    | Planta Pelotização | Montagem | Equipamentos | 15 | un | 2250 | 150 | 5 mecânicos + 2 riggers | 30 | 450.000 | 2025 |
+    | Planta Pelotização | Montagem | Tubulação | 3500 | m | 8750 | 2.5 | 8 tubuladores + 5 soldadores | 70 | 1.750.000 | 2025 |
+    | Siderúrgica CSN | Desmontagem | Estrutura Metálica | 100 | ton | 2000 | 20 | 6 montadores + 1 rigger | 25 | 400.000 | 2025 |
+    | Siderúrgica CSN | Montagem | Estrutura Metálica | 180 | ton | 4680 | 26 | 9 montadores + 3 soldadores | 52 | 890.000 | 2025 |
+    | Mineradora Anglo | Fabricação | Caldeiraria | 50 | ton | 2500 | 50 | 5 caldeireiros + 3 soldadores | 35 | 625.000 | 2025 |
+    | Mineradora Anglo | Montagem | Equipamentos | 8 | un | 1600 | 200 | 4 mecânicos + 2 riggers | 20 | 320.000 | 2025 |
+    | Planta Filtragem | Montagem | Tubulação | 1500 | m | 4500 | 3 | 6 tubuladores + 3 soldadores | 38 | 900.000 | 2025 |
+    | Planta Filtragem | Montagem | Estrutura Metálica | 120 | ton | 3360 | 28 | 7 montadores + 2 soldadores | 35 | 640.000 | 2025 |
+    | Mineradora Samarco | Reforma | Equipamentos | 12 | un | 2400 | 200 | 4 mecânicos + 3 soldadores | 30 | 480.000 | 2026 |
+    | Mineradora Samarco | Montagem | Estrutura Metálica | 250 | ton | 6250 | 25 | 12 montadores + 4 soldadores | 55 | 1.187.500 | 2026 |
+    | Britagem Primária | Montagem | Caldeiraria | 90 | ton | 3600 | 40 | 7 caldeireiros + 3 soldadores | 38 | 720.000 | 2026 |
   expected_output: >
     Planilha de composição contendo:
     - Serviço x HH estimado x Equipe x Produtividade
@@ -50,11 +66,46 @@ consolidacao_orcamento:
     Consolide o orçamento completo do projeto utilizando os quantitativos
     e composições de HH definidos nas etapas anteriores.
 
+    Utilize a TABELA DE CUSTOS REFERENCIAIS da MSI Engenharia abaixo:
+
+    TABELA DE CUSTOS REFERENCIAIS MSI ENGENHARIA:
+    MÃO DE OBRA:
+    - Montador Industrial: R$ 85/HH (CCT Sindimetal 2026)
+    - Soldador Qualificado: R$ 110/HH (CCT Sindimetal 2026)
+    - Caldeireiro: R$ 95/HH (CCT Sindimetal 2026)
+    - Tubulador: R$ 90/HH (CCT Sindimetal 2026)
+    - Rigger: R$ 100/HH (CCT Sindimetal 2026)
+    - Mecânico Industrial: R$ 105/HH (CCT Sindimetal 2026)
+    - Encarregado: R$ 130/HH (CCT Sindimetal 2026)
+    - Supervisor: R$ 180/HH (MSI Engenharia)
+
+    MATERIAIS:
+    - Aço Estrutural A572 Gr50: R$ 8,50/kg (Cotação Gerdau Jun/2026)
+    - Tubo Aço Carbono Sch40: R$ 320/m (Cotação Vallourec Jun/2026)
+    - Eletrodo E7018: R$ 35/kg (Cotação ESAB Jun/2026)
+    - Chapa Aço Carbono 1/2": R$ 7,80/kg (Cotação Usiminas Jun/2026)
+
+    EQUIPAMENTOS:
+    - Guindaste 50t (com operador): R$ 4.500/diária (Cotação Locar Mai/2026)
+    - Munck 15t: R$ 1.800/diária (Cotação Locar Mai/2026)
+    - Plataforma Elevatória: R$ 950/diária (Cotação Mills Mai/2026)
+    - Máquina de Solda MIG/MAG: R$ 180/diária (MSI Engenharia)
+
+    CUSTOS INDIRETOS:
+    - Mobilização (até 500km): R$ 45.000 verba (MSI Engenharia)
+    - Alimentação: R$ 65/pessoa/dia (Contrato Sodexo)
+    - Transporte (van): R$ 8.500/mês (Cotação Local)
+    - Alojamento: R$ 80/pessoa/dia (Cotação Local)
+    - EPI (kit completo): R$ 850/un (MSI Engenharia)
+    - Ferramental (kit equipe): R$ 3.500/mês (MSI Engenharia)
+    - Administração de Obra: 8% (MSI Engenharia)
+    - BDI Padrão MSI: 22%
+
     Inclua:
-    1. Custos diretos: mão de obra (por categoria), materiais e equipamentos
+    1. Custos diretos: mão de obra (usando tabela acima), materiais e equipamentos
     2. Custos indiretos: mobilização/desmobilização, alimentação, transporte,
-       alojamento, EPIs, ferramentas, administração de obra
-    3. BDI (Bonificação e Despesas Indiretas)
+       alojamento, EPIs, ferramentas, administração de obra (usando tabela acima)
+    3. BDI (Bonificação e Despesas Indiretas) - referência: 22% MSI
     4. Margem de lucro e contingência
     5. Cronograma físico-financeiro com condições de pagamento
     6. Validade da proposta e premissas adotadas

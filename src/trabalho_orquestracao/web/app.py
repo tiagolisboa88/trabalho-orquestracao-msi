@@ -10,9 +10,9 @@ app = FastAPI(title="MSI Engenharia - Orçamentação Inteligente")
 
 CREWAI_URL = os.getenv(
     "CREWAI_API_URL",
-    "https://trabalho-orquestracao-b4600064-ea1f-4e7a-bd-ff2c9c44.crewai.com"
+    "https://trabalho-orquestracao-b9058fa5-081b-43c5-b3-f282ed4c.crewai.com"
 )
-CREWAI_TOKEN = os.getenv("CREWAI_TOKEN", "086e269cb90f")
+CREWAI_TOKEN = os.getenv("CREWAI_TOKEN", "de008b5e5658")
 
 STATIC_DIR = Path(__file__).parent / "static"
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
