@@ -129,7 +129,17 @@ consolidacao_orcamento:
 
 revisao_proposta:
   description: >
-    Revise a proposta final sob os aspectos jurídicos, técnicos e de preços:
+    Revise a proposta final sob os aspectos jurídicos, técnicos e de preços.
+    Use os dados de referência abaixo para validar os valores da proposta.
+
+    REFERÊNCIAS DE PREÇOS MSI ENGENHARIA (CCT Sindimetal 2026 e cotações Jun/2026):
+    MÃO DE OBRA: Montador R$85/HH | Soldador R$110/HH | Caldeireiro R$95/HH | Tubulador R$90/HH | Rigger R$100/HH | Mecânico R$105/HH | Encarregado R$130/HH | Supervisor R$180/HH
+    MATERIAIS: Aço A572 R$8,50/kg | Tubo Sch40 R$320/m | Eletrodo E7018 R$35/kg | Chapa 1/2" R$7,80/kg
+    EQUIPAMENTOS: Guindaste 50t R$4.500/dia | Munck 15t R$1.800/dia | Plataforma R$950/dia | Solda MIG R$180/dia
+    INDIRETOS: Mobilização R$45.000 | Alimentação R$65/pessoa/dia | Transporte R$8.500/mês | Alojamento R$80/pessoa/dia | EPI R$850/un | Ferramental R$3.500/mês | Adm Obra 8% | BDI Padrão 22%
+
+    HISTÓRICO DE CUSTOS POR DISCIPLINA (referência):
+    Estrutura Metálica: 25-30 HH/ton, R$4.750-5.700/ton | Tubulação: 2,5-3 HH/m, R$500-600/m | Caldeiraria: 40-50 HH/ton, R$7.100-8.000/ton | Equipamentos: 150-200 HH/un, R$30.000-40.000/un
 
     Aspectos Jurídicos:
     1. Cláusulas de responsabilidade e garantia
@@ -143,9 +153,9 @@ revisao_proposta:
     3. Viabilidade do cronograma proposto
     4. Riscos técnicos identificados
 
-    Validação de Preços:
-    1. Custos de mão de obra vs. pisos salariais e convenções coletivas
-    2. Preços de materiais vs. referências de mercado
+    Validação de Preços (compare com as referências acima):
+    1. Custos de mão de obra vs. pisos salariais CCT Sindimetal 2026
+    2. Preços de materiais vs. cotações de mercado Jun/2026
     3. BDI vs. faixas praticadas no mercado de montagem industrial (15-30%)
     4. Preço global vs. orçamentos históricos de projetos similares
     5. Sinalize valores fora da faixa aceitável (±15%) com risco (baixo/médio/alto)

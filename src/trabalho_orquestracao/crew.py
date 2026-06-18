@@ -75,5 +75,5 @@ class TrabalhoOrquestracao():
             tasks=self.tasks,
             process=Process.sequential,
             verbose=True,
-            memory=True,
+            memory=False,
         )
