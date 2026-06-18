@@ -35,14 +35,6 @@ class TrabalhoOrquestracao():
         )
 
     @agent
-    def validador(self) -> Agent:
-        return Agent(
-            config=self.agents_config['validador'],
-            verbose=True,
-            allow_delegation=False
-        )
-
-    @agent
     def revisor_proposta(self) -> Agent:
         return Agent(
             config=self.agents_config['revisor_proposta'],
@@ -66,12 +58,6 @@ class TrabalhoOrquestracao():
     def consolidacao_orcamento(self) -> Task:
         return Task(
             config=self.tasks_config['consolidacao_orcamento'],
-        )
-
-    @task
-    def validacao_precos(self) -> Task:
-        return Task(
-            config=self.tasks_config['validacao_precos'],
         )
 
     @task

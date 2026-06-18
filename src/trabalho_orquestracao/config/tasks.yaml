@@ -1,6 +1,10 @@
 leitura_tecnica:
   description: >
-    Analise os documentos técnicos fornecidos pelo cliente para o projeto: {projeto}.
+    Analise o documento PDF de escopo técnico fornecido pelo cliente
+    para o projeto: {projeto}.
+
+    O conteúdo do PDF de escopo é:
+    {escopo_pdf}
 
     Extraia as seguintes informações:
     1. Classificação dos serviços (montagem, reforma, desmontagem, fabricação, etc.)
@@ -8,8 +12,6 @@ leitura_tecnica:
     3. Requisitos técnicos especiais (soldas especiais, tratamentos térmicos, etc.)
     4. Condições de campo (altura, espaço confinado, área classificada)
     5. Prazo solicitado pelo cliente
-
-    Documentos de referência: {documentos}
   expected_output: >
     Relatório estruturado contendo:
     - Lista de serviços classificados por disciplina
@@ -77,32 +79,9 @@ consolidacao_orcamento:
   agent: orcamentista
   human_input: true
 
-validacao_precos:
-  description: >
-    Valide os preços e custos apresentados no orçamento verificando:
-
-    1. Custos de mão de obra vs. pisos salariais (CAGED, convenções coletivas)
-    2. Preços de materiais vs. cotações de mercado e tabelas de referência
-    3. Índices de produtividade vs. referências SINAPI/SICRO quando aplicável
-    4. BDI vs. faixas praticadas no mercado de montagem industrial
-    5. Preço global vs. orçamentos históricos de projetos similares da MSI
-
-    Sinalize qualquer valor fora da faixa aceitável (±15% da referência)
-    com classificação de risco (baixo, médio, alto).
-
-    Busque dados atualizados de mercado via web para validar os valores.
-  expected_output: >
-    Relatório de validação contendo:
-    - Checklist de itens validados (aprovado/alerta/reprovado)
-    - Comparativo de preços (orçado vs. referência de mercado)
-    - Alertas de risco com classificação e recomendação
-    - Parecer final sobre a competitividade do orçamento
-    - KPIs: taxa de aderência ao mercado, número de alertas por categoria
-  agent: validador
-
 revisao_proposta:
   description: >
-    Revise a proposta final sob os aspectos jurídicos e técnicos:
+    Revise a proposta final sob os aspectos jurídicos, técnicos e de preços:
 
     Aspectos Jurídicos:
     1. Cláusulas de responsabilidade e garantia
@@ -116,17 +95,24 @@ revisao_proposta:
     3. Viabilidade do cronograma proposto
     4. Riscos técnicos identificados
 
-    Forneça parecer final com recomendações de ajuste antes do envio.
+    Validação de Preços:
+    1. Custos de mão de obra vs. pisos salariais e convenções coletivas
+    2. Preços de materiais vs. referências de mercado
+    3. BDI vs. faixas praticadas no mercado de montagem industrial (15-30%)
+    4. Preço global vs. orçamentos históricos de projetos similares
+    5. Sinalize valores fora da faixa aceitável (±15%) com risco (baixo/médio/alto)
 
     KPIs finais a consolidar:
     - Tempo total de elaboração do orçamento
     - Número de revisões necessárias
     - Score de risco geral da proposta (1-10)
     - Score de competitividade (1-10)
+    - Taxa de aderência ao mercado
   expected_output: >
     Parecer de revisão contendo:
     - Análise jurídica com riscos e recomendações
     - Análise técnica com conformidade normativa
+    - Validação de preços com comparativo de mercado
     - Lista de riscos identificados com mitigações
     - Recomendações de ajuste na proposta
     - Parecer final (aprovado / aprovado com ressalvas / reprovado)

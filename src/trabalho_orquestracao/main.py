@@ -12,7 +12,7 @@ warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 def run():
     inputs = {
         'projeto': 'Montagem de Estruturas Metálicas - Planta de Beneficiamento',
-        'documentos': 'Memorial descritivo, desenhos estruturais e lista de materiais',
+        'escopo_pdf': 'Inserir conteúdo do PDF de escopo técnico aqui',
         'base_historica': 'base_historica_obras.xlsx',
         'current_year': str(datetime.now().year)
     }
@@ -26,7 +26,7 @@ def run():
 def train():
     inputs = {
         'projeto': 'Montagem de Estruturas Metálicas - Planta de Beneficiamento',
-        'documentos': 'Memorial descritivo, desenhos estruturais e lista de materiais',
+        'escopo_pdf': 'Inserir conteúdo do PDF de escopo técnico aqui',
         'base_historica': 'base_historica_obras.xlsx',
         'current_year': str(datetime.now().year)
     }
@@ -46,7 +46,7 @@ def replay():
 def test():
     inputs = {
         'projeto': 'Montagem de Estruturas Metálicas - Planta de Beneficiamento',
-        'documentos': 'Memorial descritivo, desenhos estruturais e lista de materiais',
+        'escopo_pdf': 'Inserir conteúdo do PDF de escopo técnico aqui',
         'base_historica': 'base_historica_obras.xlsx',
         'current_year': str(datetime.now().year)
     }
@@ -70,7 +70,7 @@ def run_with_trigger():
     inputs = {
         "crewai_trigger_payload": trigger_payload,
         "projeto": "",
-        "documentos": "",
+        "escopo_pdf": "",
         "base_historica": "base_historica_obras.xlsx",
         "current_year": str(datetime.now().year)
     }
