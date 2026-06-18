@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSI Engenharia - Orçamentação Inteligente</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+
+        .header { background: linear-gradient(135deg, #1e293b, #0f172a); border-bottom: 1px solid #334155; padding: 1.5rem 2rem; display: flex; align-items: center; gap: 1rem; }
+        .header h1 { font-size: 1.5rem; font-weight: 600; }
+        .header span { color: #60a5fa; }
+        .badge { background: #166534; color: #86efac; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+
+        .container { max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; }
+
+        .pipeline { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .step { display: flex; align-items: center; gap: 0.5rem; }
+        .step-box { padding: 0.6rem 1rem; border-radius: 0.5rem; font-size: 0.8rem; font-weight: 600; border: 1px solid #334155; background: #1e293b; transition: all 0.3s; position: relative; }
+        .step-box.active { border-color: #3b82f6; background: #1e3a5f; box-shadow: 0 0 15px rgba(59,130,246,0.3); }
+        .step-box.done { border-color: #22c55e; background: #14532d; }
+        .step-box.error { border-color: #ef4444; background: #450a0a; }
+        .step-arrow { color: #475569; font-size: 1.2rem; }
+        .step-icon { margin-right: 0.3rem; }
+
+        .card { background: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 1.5rem; }
+        .card h2 { font-size: 1.1rem; margin-bottom: 1rem; color: #f1f5f9; }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.4rem; font-weight: 500; }
+        .form-group input[type="text"] { width: 100%; padding: 0.7rem 1rem; background: #0f172a; border: 1px solid #334155; border-radius: 0.5rem; color: #e2e8f0; font-size: 0.9rem; outline: none; transition: border 0.2s; }
+        .form-group input:focus { border-color: #3b82f6; }
+
+        .upload-area { border: 2px dashed #334155; border-radius: 0.75rem; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
+        .upload-area:hover, .upload-area.dragover { border-color: #3b82f6; background: rgba(59,130,246,0.05); }
+        .upload-area.has-file { border-color: #22c55e; background: rgba(34,197,94,0.05); }
+        .upload-area input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+        .upload-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .upload-text { color: #94a3b8; font-size: 0.9rem; }
+        .upload-filename { color: #22c55e; font-weight: 600; margin-top: 0.5rem; }
+
+        .btn { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border: none; padding: 0.8rem 2rem; border-radius: 0.5rem; font-size: 1rem; font-weight: 600; cursor: pointer; width: 100%; transition: all 0.2s; }
+        .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(37,99,235,0.4); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .result-area { display: none; }
+        .result-area.visible { display: block; }
+
+        .status-bar { display: flex; align-items: center; gap: 0.75rem; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
+        .status-bar.running { background: rgba(59,130,246,0.1); border: 1px solid #3b82f6; }
+        .status-bar.success { background: rgba(34,197,94,0.1); border: 1px solid #22c55e; }
+        .status-bar.error { background: rgba(239,68,68,0.1); border: 1px solid #ef4444; }
+        .spinner { width: 20px; height: 20px; border: 3px solid #334155; border-top-color: #3b82f6; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .task-info { background: #0f172a; border: 1px solid #334155; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1rem; }
+        .task-info h3 { font-size: 0.85rem; color: #60a5fa; margin-bottom: 0.5rem; }
+        .task-info p { font-size: 0.8rem; color: #94a3b8; line-height: 1.5; }
+
+        .result-content { background: #0f172a; border: 1px solid #334155; border-radius: 0.5rem; padding: 1.5rem; white-space: pre-wrap; font-size: 0.85rem; line-height: 1.6; max-height: 500px; overflow-y: auto; }
+
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+        .kpi-card { background: #0f172a; border: 1px solid #334155; border-radius: 0.5rem; padding: 1rem; text-align: center; }
+        .kpi-value { font-size: 1.5rem; font-weight: 700; color: #60a5fa; }
+        .kpi-label { font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem; }
+
+        .footer { text-align: center; padding: 2rem; color: #475569; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><span>MSI</span> Engenharia</h1>
+        <div class="badge">IA Multiagente</div>
+        <div style="flex:1"></div>
+        <div style="font-size:0.8rem;color:#64748b;">Orçamentação Inteligente</div>
+    </div>
+
+    <div class="container">
+        <div class="pipeline" id="pipeline">
+            <div class="step">
+                <div class="step-box" id="step-upload">
+                    <span class="step-icon">📄</span> Upload PDF
+                </div>
+            </div>
+            <span class="step-arrow">→</span>
+            <div class="step">
+                <div class="step-box" id="step-leitor">
+                    <span class="step-icon">🔍</span> Leitor Técnico
+                </div>
+            </div>
+            <span class="step-arrow">→</span>
+            <div class="step">
+                <div class="step-box" id="step-compositor">
+                    <span class="step-icon">👷</span> Compositor HH
+                </div>
+            </div>
+            <span class="step-arrow">→</span>
+            <div class="step">
+                <div class="step-box" id="step-orcamentista">
+                    <span class="step-icon">💰</span> Orçamentista
+                </div>
+            </div>
+            <span class="step-arrow">→</span>
+            <div class="step">
+                <div class="step-box" id="step-revisor">
+                    <span class="step-icon">⚖️</span> Revisor
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="form-card">
+            <h2>Novo Orçamento</h2>
+            <form id="kickoff-form">
+                <div class="form-group">
+                    <label for="projeto">Nome do Projeto</label>
+                    <input type="text" id="projeto" name="projeto" placeholder="Ex: Montagem de Estruturas Metálicas - Planta de Beneficiamento" required>
+                </div>
+
+                <div class="form-group">
+                    <label>PDF de Escopo Técnico</label>
+                    <div class="upload-area" id="upload-area">
+                        <input type="file" id="escopo_pdf" name="escopo_pdf" accept=".pdf" required>
+                        <div class="upload-icon">📎</div>
+                        <div class="upload-text">Arraste o PDF aqui ou clique para selecionar</div>
+                        <div class="upload-filename" id="filename" style="display:none"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="base_historica">Base Histórica de Referência</label>
+                    <input type="text" id="base_historica" name="base_historica" value="base_historica_obras.xlsx">
+                </div>
+
+                <button type="submit" class="btn" id="submit-btn">Gerar Orçamento</button>
+            </form>
+        </div>
+
+        <div class="result-area" id="result-area">
+            <div class="card">
+                <h2>Status da Execução</h2>
+
+                <div class="kpi-grid" id="kpi-grid" style="display:none">
+                    <div class="kpi-card">
+                        <div class="kpi-value" id="kpi-agents">4</div>
+                        <div class="kpi-label">Agentes</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value" id="kpi-status">--</div>
+                        <div class="kpi-label">Status</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value" id="kpi-task">--</div>
+                        <div class="kpi-label">Task Atual</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value" id="kpi-time">0s</div>
+                        <div class="kpi-label">Tempo</div>
+                    </div>
+                </div>
+
+                <div class="status-bar running" id="status-bar">
+                    <div class="spinner" id="spinner"></div>
+                    <span id="status-text">Iniciando crew...</span>
+                </div>
+
+                <div class="task-info" id="task-info" style="display:none">
+                    <h3 id="task-agent">Agente</h3>
+                    <p id="task-detail">Detalhes da task...</p>
+                </div>
+            </div>
+
+            <div class="card" id="result-card" style="display:none">
+                <h2>Resultado Final</h2>
+                <div class="result-content" id="result-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        MSI Engenharia &mdash; Sistema de Orçamentação com IA Multiagente &mdash; MBA FIAP 2026
+    </div>
+
+    <script>
+        const form = document.getElementById('kickoff-form');
+        const fileInput = document.getElementById('escopo_pdf');
+        const uploadArea = document.getElementById('upload-area');
+        const filenameEl = document.getElementById('filename');
+        const submitBtn = document.getElementById('submit-btn');
+        const resultArea = document.getElementById('result-area');
+        const statusBar = document.getElementById('status-bar');
+        const statusText = document.getElementById('status-text');
+        const spinner = document.getElementById('spinner');
+        const taskInfo = document.getElementById('task-info');
+        const kpiGrid = document.getElementById('kpi-grid');
+        let startTime;
+
+        const agentSteps = {
+            'leitor_tecnico': 'step-leitor',
+            'compositor': 'step-compositor',
+            'orcamentista': 'step-orcamentista',
+            'revisor_proposta': 'step-revisor',
+            'Leitor': 'step-leitor',
+            'Compositor': 'step-compositor',
+            'Orçamentista': 'step-orcamentista',
+            'Revisor': 'step-revisor',
+        };
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length) {
+                filenameEl.textContent = fileInput.files[0].name;
+                filenameEl.style.display = 'block';
+                uploadArea.classList.add('has-file');
+                uploadArea.querySelector('.upload-text').textContent = 'Arquivo selecionado:';
+            }
+        });
+
+        ['dragover', 'dragenter'].forEach(e => {
+            uploadArea.addEventListener(e, ev => { ev.preventDefault(); uploadArea.classList.add('dragover'); });
+        });
+        ['dragleave', 'drop'].forEach(e => {
+            uploadArea.addEventListener(e, ev => { ev.preventDefault(); uploadArea.classList.remove('dragover'); });
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processando...';
+            resultArea.classList.add('visible');
+            kpiGrid.style.display = 'grid';
+            startTime = Date.now();
+            document.getElementById('step-upload').classList.add('done');
+
+            const formData = new FormData();
+            formData.append('projeto', document.getElementById('projeto').value);
+            formData.append('base_historica', document.getElementById('base_historica').value);
+            formData.append('escopo_pdf', fileInput.files[0]);
+
+            try {
+                const res = await fetch('/api/kickoff', { method: 'POST', body: formData });
+                const data = await res.json();
+
+                if (data.error) {
+                    showError(data.error);
+                    return;
+                }
+
+                if (data.kickoff_id) {
+                    pollStatus(data.kickoff_id);
+                }
+            } catch (err) {
+                showError('Erro ao conectar com a API: ' + err.message);
+            }
+        });
+
+        function updateTime() {
+            if (!startTime) return;
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const min = Math.floor(elapsed / 60);
+            const sec = elapsed % 60;
+            document.getElementById('kpi-time').textContent = min > 0 ? `${min}m ${sec}s` : `${sec}s`;
+        }
+
+        async function pollStatus(kickoffId) {
+            const timer = setInterval(updateTime, 1000);
+
+            const poll = async () => {
+                try {
+                    const res = await fetch(`/api/status/${kickoffId}`);
+                    const data = await res.json();
+
+                    document.getElementById('kpi-status').textContent = data.state || '--';
+
+                    if (data.last_executed_task) {
+                        const agent = data.last_executed_task.agent || data.last_executed_task.name || '';
+                        taskInfo.style.display = 'block';
+                        document.getElementById('task-agent').textContent = agent;
+                        document.getElementById('task-detail').textContent = data.last_executed_task.summary || data.last_executed_task.description || '';
+                        document.getElementById('kpi-task').textContent = agent.split(' ')[0] || '--';
+
+                        Object.values(agentSteps).forEach(id => {
+                            document.getElementById(id).classList.remove('active');
+                        });
+                        for (const [key, stepId] of Object.entries(agentSteps)) {
+                            if (agent.toLowerCase().includes(key.toLowerCase())) {
+                                document.getElementById(stepId).classList.add('active');
+                                break;
+                            }
+                        }
+                    }
+
+                    if (data.last_step && data.last_step.result) {
+                        statusText.textContent = 'Agente processando...';
+                    }
+
+                    if (data.state === 'SUCCESS') {
+                        clearInterval(timer);
+                        updateTime();
+                        showSuccess(data.result);
+                        return;
+                    } else if (data.state === 'FAILURE') {
+                        clearInterval(timer);
+                        showError(data.result || 'Erro na execução do crew');
+                        return;
+                    }
+
+                    setTimeout(poll, 5000);
+                } catch (err) {
+                    setTimeout(poll, 5000);
+                }
+            };
+
+            poll();
+        }
+
+        function showSuccess(result) {
+            statusBar.className = 'status-bar success';
+            spinner.style.display = 'none';
+            statusText.textContent = 'Orçamento concluído com sucesso!';
+            document.getElementById('kpi-status').textContent = 'OK';
+
+            Object.values(agentSteps).forEach(id => {
+                document.getElementById(id).classList.remove('active');
+                document.getElementById(id).classList.add('done');
+            });
+
+            const resultCard = document.getElementById('result-card');
+            resultCard.style.display = 'block';
+            document.getElementById('result-content').textContent = result || 'Sem resultado disponível';
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Gerar Novo Orçamento';
+        }
+
+        function showError(msg) {
+            statusBar.className = 'status-bar error';
+            spinner.style.display = 'none';
+            statusText.textContent = 'Erro: ' + msg;
+            document.getElementById('kpi-status').textContent = 'ERRO';
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Tentar Novamente';
+        }
+    </script>
+</body>
+</html>

@@ -20,7 +20,6 @@ leitura_tecnica:
     - Condições especiais de campo identificadas
     - Prazo do cliente e observações relevantes
   agent: leitor_tecnico
-  human_input: true
 
 composicao_hh:
   description: >
@@ -45,7 +44,6 @@ composicao_hh:
     - Total de HH por disciplina e geral
     - Cronograma preliminar de execução
   agent: compositor
-  human_input: true
 
 consolidacao_orcamento:
   description: >
@@ -77,7 +75,6 @@ consolidacao_orcamento:
     - Condições comerciais (pagamento, reajuste, validade)
     - Dashboard de KPIs do orçamento
   agent: orcamentista
-  human_input: true
 
 revisao_proposta:
   description: >
@@ -118,4 +115,3 @@ revisao_proposta:
     - Parecer final (aprovado / aprovado com ressalvas / reprovado)
     - Dashboard consolidado de KPIs do orçamento
   agent: revisor_proposta
-  human_input: true
