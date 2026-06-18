@@ -1,0 +1,135 @@
+leitura_tecnica:
+  description: >
+    Analise os documentos técnicos fornecidos pelo cliente para o projeto: {projeto}.
+
+    Extraia as seguintes informações:
+    1. Classificação dos serviços (montagem, reforma, desmontagem, fabricação, etc.)
+    2. Quantitativos de materiais (tubulação em metros, estruturas em toneladas, etc.)
+    3. Requisitos técnicos especiais (soldas especiais, tratamentos térmicos, etc.)
+    4. Condições de campo (altura, espaço confinado, área classificada)
+    5. Prazo solicitado pelo cliente
+
+    Documentos de referência: {documentos}
+  expected_output: >
+    Relatório estruturado contendo:
+    - Lista de serviços classificados por disciplina
+    - Quantitativos detalhados com unidades de medida
+    - Requisitos técnicos e normas aplicáveis
+    - Condições especiais de campo identificadas
+    - Prazo do cliente e observações relevantes
+  agent: leitor_tecnico
+  human_input: true
+
+composicao_hh:
+  description: >
+    Com base no escopo e quantitativos extraídos pelo Leitor Técnico,
+    defina a composição de Homem-Hora (HH) para cada serviço.
+
+    Para cada serviço, determine:
+    1. Índice de produtividade (HH/unidade) baseado em dados históricos
+    2. Composição da equipe (quantidade e qualificação dos profissionais)
+    3. Duração estimada de cada atividade
+    4. Fatores de ajuste (complexidade, condições de campo, turno)
+
+    Consulte a base histórica de obras da MSI Engenharia e
+    práticas de mercado para montagem industrial e mineração.
+
+    Base histórica de referência: {base_historica}
+  expected_output: >
+    Planilha de composição contendo:
+    - Serviço x HH estimado x Equipe x Produtividade
+    - Justificativa dos índices adotados
+    - Fatores de ajuste aplicados
+    - Total de HH por disciplina e geral
+    - Cronograma preliminar de execução
+  agent: compositor
+  human_input: true
+
+consolidacao_orcamento:
+  description: >
+    Consolide o orçamento completo do projeto utilizando os quantitativos
+    e composições de HH definidos nas etapas anteriores.
+
+    Inclua:
+    1. Custos diretos: mão de obra (por categoria), materiais e equipamentos
+    2. Custos indiretos: mobilização/desmobilização, alimentação, transporte,
+       alojamento, EPIs, ferramentas, administração de obra
+    3. BDI (Bonificação e Despesas Indiretas)
+    4. Margem de lucro e contingência
+    5. Cronograma físico-financeiro com condições de pagamento
+    6. Validade da proposta e premissas adotadas
+
+    KPIs a reportar:
+    - Custo por HH médio (R$/HH)
+    - Percentual de custos indiretos sobre diretos
+    - BDI aplicado vs. faixa de mercado (15-30%)
+    - Margem líquida estimada
+  expected_output: >
+    Proposta comercial completa contendo:
+    - Resumo executivo do escopo
+    - Planilha de custos detalhada (diretos + indiretos)
+    - Composição do BDI
+    - Preço global e unitários
+    - Cronograma físico-financeiro
+    - Premissas e exclusões
+    - Condições comerciais (pagamento, reajuste, validade)
+    - Dashboard de KPIs do orçamento
+  agent: orcamentista
+  human_input: true
+
+validacao_precos:
+  description: >
+    Valide os preços e custos apresentados no orçamento verificando:
+
+    1. Custos de mão de obra vs. pisos salariais (CAGED, convenções coletivas)
+    2. Preços de materiais vs. cotações de mercado e tabelas de referência
+    3. Índices de produtividade vs. referências SINAPI/SICRO quando aplicável
+    4. BDI vs. faixas praticadas no mercado de montagem industrial
+    5. Preço global vs. orçamentos históricos de projetos similares da MSI
+
+    Sinalize qualquer valor fora da faixa aceitável (±15% da referência)
+    com classificação de risco (baixo, médio, alto).
+
+    Busque dados atualizados de mercado via web para validar os valores.
+  expected_output: >
+    Relatório de validação contendo:
+    - Checklist de itens validados (aprovado/alerta/reprovado)
+    - Comparativo de preços (orçado vs. referência de mercado)
+    - Alertas de risco com classificação e recomendação
+    - Parecer final sobre a competitividade do orçamento
+    - KPIs: taxa de aderência ao mercado, número de alertas por categoria
+  agent: validador
+
+revisao_proposta:
+  description: >
+    Revise a proposta final sob os aspectos jurídicos e técnicos:
+
+    Aspectos Jurídicos:
+    1. Cláusulas de responsabilidade e garantia
+    2. Condições de reajuste e multas
+    3. Seguros obrigatórios (RC, risco de engenharia)
+    4. Conformidade com legislação trabalhista
+
+    Aspectos Técnicos:
+    1. Conformidade com normas regulamentadoras (NR-13, NR-18, NR-35, etc.)
+    2. Requisitos de segurança do trabalho
+    3. Viabilidade do cronograma proposto
+    4. Riscos técnicos identificados
+
+    Forneça parecer final com recomendações de ajuste antes do envio.
+
+    KPIs finais a consolidar:
+    - Tempo total de elaboração do orçamento
+    - Número de revisões necessárias
+    - Score de risco geral da proposta (1-10)
+    - Score de competitividade (1-10)
+  expected_output: >
+    Parecer de revisão contendo:
+    - Análise jurídica com riscos e recomendações
+    - Análise técnica com conformidade normativa
+    - Lista de riscos identificados com mitigações
+    - Recomendações de ajuste na proposta
+    - Parecer final (aprovado / aprovado com ressalvas / reprovado)
+    - Dashboard consolidado de KPIs do orçamento
+  agent: revisor_proposta
+  human_input: true
