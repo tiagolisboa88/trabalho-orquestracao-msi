@@ -1,54 +1,96 @@
-# TrabalhoOrquestracao Crew
+# MSI Engenharia - Sistema Multiagente de Orqamentacao Tecnica
 
-Welcome to the TrabalhoOrquestracao Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+Sistema multiagente de inteligencia artificial para automacao da orcamentacao tecnica na MSI Engenharia, empresa especializada em montagem mecanica industrial e mineracao. Desenvolvido como trabalho de MBA em Engenharia de Software da FIAP, utilizando o framework CrewAI para orquestracao de agentes.
 
-## Installation
+O sistema recebe um PDF de escopo tecnico do cliente e, de forma autonoma, executa a analise tecnica, composicao de equipes e homem-hora, consolidacao de custos e revisao juridico-tecnica, gerando uma proposta comercial completa.
 
-Ensure you have Python >=3.10 <3.14 installed on your system. This project uses [UV](https://docs.astral.sh/uv/) for dependency management and package handling, offering a seamless setup and execution experience.
+## Arquitetura
 
-First, if you haven't already, install uv:
+O fluxo sequencial utiliza 4 agentes especializados:
+
+```
+PDF de Escopo → Leitor Tecnico → Compositor HH → Orcamentista → Revisor → Proposta Final
+```
+
+| Agente | Funcao |
+|--------|--------|
+| **Leitor Tecnico** | Extrai servicos, quantitativos e requisitos do PDF de escopo |
+| **Compositor HH** | Define homem-hora, equipes e produtividade com base historica |
+| **Orcamentista** | Consolida custos diretos/indiretos, BDI e cronograma |
+| **Revisor** | Revisa aspectos juridicos, tecnicos e valida precos |
+
+## Stack de Tecnologia
+
+- **Orquestracao**: CrewAI v1.14.7
+- **LLM**: OpenAI GPT-4o
+- **Deploy**: CrewAI Platform (app.crewai.com)
+- **Interface Web**: FastAPI + HTML (local)
+- **Linguagem**: Python 3.10+
+- **Gerenciador de Pacotes**: uv
+
+## Base de Conhecimento
+
+O sistema utiliza dados referenciais embutidos nas instrucoes dos agentes:
+
+- **Base Historica de Obras**: 15 registros de 8 obras anteriores (HH, equipes, custos, produtividade)
+- **Tabela de Custos Referenciais**: 24 itens de referencia (mao de obra CCT Sindimetal 2026, materiais, equipamentos, custos indiretos, BDI)
+
+## Instalacao
+
+Requisitos: Python >=3.10 <3.14
 
 ```bash
 pip install uv
-```
-
-Next, navigate to your project directory and install the dependencies:
-
-(Optional) Lock the dependencies and install them by using the CLI command:
-```bash
 crewai install
 ```
-### Customizing
 
-**Add your `OPENAI_API_KEY` into the `.env` file**
+Configure o arquivo `.env`:
 
-- Modify `src/trabalho_orquestracao/config/agents.yaml` to define your agents
-- Modify `src/trabalho_orquestracao/config/tasks.yaml` to define your tasks
-- Modify `src/trabalho_orquestracao/crew.py` to add your own logic, tools and specific args
-- Modify `src/trabalho_orquestracao/main.py` to add custom inputs for your agents and tasks
-
-## Running the Project
-
-To kickstart your crew of AI agents and begin task execution, run this from the root folder of your project:
-
-```bash
-$ crewai run
+```
+MODEL=gpt-4o
+OPENAI_API_KEY=sua-chave-aqui
 ```
 
-This command initializes the trabalho_orquestracao Crew, assembling the agents and assigning them tasks as defined in your configuration.
+## Execucao
 
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
+### Via CLI
 
-## Understanding Your Crew
+```bash
+crewai run
+```
 
-The trabalho_orquestracao Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
+### Via Interface Web (local)
 
-## Support
+```bash
+uvicorn trabalho_orquestracao.web.app:app --host 0.0.0.0 --port 8080
+```
 
-For support, questions, or feedback regarding the TrabalhoOrquestracao Crew or crewAI.
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
+Acesse `http://localhost:8080`, faca upload do PDF de escopo e acompanhe a execucao.
 
-Let's create wonders together with the power and simplicity of crewAI.
+### Deploy na Plataforma CrewAI
+
+```bash
+crewai deploy create
+crewai deploy push
+```
+
+## Estrutura do Projeto
+
+```
+src/trabalho_orquestracao/
+├── config/
+│   ├── agents.yaml          # Definicao dos 4 agentes
+│   └── tasks.yaml           # Definicao das 4 tarefas com base de conhecimento
+├── web/
+│   ├── app.py               # Backend FastAPI (proxy para CrewAI Platform)
+│   └── static/index.html    # Interface web com upload de PDF
+├── crew.py                  # Orquestracao do crew (sequencial)
+└── main.py                  # Ponto de entrada
+knowledge/
+├── base_historica_obras.xlsx # Historico de obras MSI
+└── tabela_custos.xlsx       # Tabela de custos referenciais
+```
+
+## Autor
+
+Tiago Lisboa - MBA FIAP Engenharia de Software
