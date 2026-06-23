@@ -64,7 +64,7 @@ class TrabalhoOrquestracao():
     def revisao_proposta(self) -> Task:
         return Task(
             config=self.tasks_config['revisao_proposta'],
-            output_file='proposta_final.md'
+            output_file=getattr(self, '_output_file', 'proposta_final.md'),
         )
 
     @crew
@@ -77,3 +77,16 @@ class TrabalhoOrquestracao():
             verbose=True,
             memory=False,
         )
+
+    def set_output_file(self, output_file: str) -> "TrabalhoOrquestracao":
+        """Reconfigura o caminho do `output_file` da task de revisão antes do kickoff."""
+        self._output_file = output_file
+        for task_instance in getattr(self, 'tasks', []) or []:
+            task_name = getattr(task_instance, 'name', '') or ''
+            description = getattr(task_instance, 'description', '') or ''
+            if 'revisao_proposta' in task_name or 'Revise a proposta final' in description:
+                try:
+                    task_instance.output_file = output_file
+                except Exception:
+                    pass
+        return self

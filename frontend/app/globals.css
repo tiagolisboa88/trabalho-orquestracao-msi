@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 30% 98%;
+    --foreground: 220 24% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 24% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 24% 14%;
+    --primary: 212 75% 38%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 92%;
+    --secondary-foreground: 220 24% 14%;
+    --muted: 220 14% 94%;
+    --muted-foreground: 220 12% 40%;
+    --accent: 212 75% 96%;
+    --accent-foreground: 212 75% 26%;
+    --destructive: 0 70% 48%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 14% 88%;
+    --input: 220 14% 88%;
+    --ring: 212 75% 50%;
+    --radius: 0.75rem;
+    --font-sans: "Inter", system-ui, sans-serif;
+    --font-display: "Space Grotesk", system-ui, sans-serif;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+  }
+}
+
+.page-container {
+  @apply mx-auto w-full max-w-7xl px-6 py-8;
+}
+
+.section-title {
+  @apply text-xs uppercase tracking-[0.18em] text-muted-foreground;
+}
+
+.kpi-card {
+  @apply rounded-xl border bg-card p-4 shadow-sm;
+}
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: white; }
+  .print-page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 18mm 16mm;
+    margin: 0 auto;
+    box-shadow: none !important;
+  }
+}
